@@ -1,0 +1,1724 @@
+GAMS 36.1.0  r2c0a44a Released Aug  2, 2021 WEX-WEI x86 64bit/MS Windows - 11/19/21 11:42:47 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+INCLUDE    F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\ANX1/Fnl/ANX1Sets.gms
+   3   
+   4  set a0 "Original activities" /
+   5     FRS          "Forestry"
+   6     COA          "Coal"
+   7     OIL          "Oil"
+   8     GAS          "Gas"
+   9     OXT          "Minerals nec"
+  10     P_C          "Petroleum and coal products"
+  11     AGR          "Agriculture"
+  12     EIT          "Vegetable oils and fats"
+  13     XMN          "Dairy products"
+  14     ETD          "Electricity transmission"
+  15     CLP          "Coal-fired power"
+  16     OLP          "Oil-fired power"
+  17     GSP          "Gas-fired power"
+  18     NUC          "Nuclear power"
+  19     HYD          "Hydro power"
+  20     SOL          "Solar power"
+  21     WND          "Wind power"
+  22     XEL          "Other power"
+  23     SRV          "Services"
+  24  / ;
+  25   
+  26  set i0(a0) "Original commodities" /
+  27     FRS          "Forestry"
+  28     COA          "Coal"
+  29     OIL          "Oil"
+  30     GAS          "Gas"
+  31     OXT          "Minerals nec"
+  32     P_C          "Petroleum and coal products"
+  33     AGR          "Agriculture"
+  34     EIT          "Vegetable oils and fats"
+  35     XMN          "Dairy products"
+  36     ETD          "Electricity transmission"
+  37     CLP          "Coal-fired power"
+  38     OLP          "Oil-fired power"
+  39     GSP          "Gas-fired power"
+  40     NUC          "Nuclear power"
+  41     HYD          "Hydro power"
+  42     SOL          "Solar power"
+  43     WND          "Wind power"
+  44     XEL          "Other power"
+  45     SRV          "Services"
+  46  / ;
+  47   
+  48  * --------------------------------------------------------------------
+  49  *
+  50  *   USER CAN MODIFY ACTIVITY/COMMODITY AGGREGATION
+  51  *   USER MUST FILL IN SUBSETS WHERE NEEDED
+  52  *
+  53  * --------------------------------------------------------------------
+  54   
+  55   
+  56  * >>>> PLACE TO CHANGE ACTIVITIES, i.e. model activities
+  57   
+  58  set act "Modeled activities" /
+  59     AGR-a        "Agriculture"
+  60     FRS-a        "Forestry"
+  61     COA-a        "Coal"
+  62     OIL-a        "Oil"
+  63     GAS-a        "Gas"
+  64     OXT-a        "Minerals nec"
+  65     EIT-a        "Vegetable oils and fats"
+  66     XMN-a        "Dairy products"
+  67     P_C-a        "Petroleum and coal products"
+  68     ETD-a        "Electricity transmission"
+  69     CLP-a        "Coal-fired power"
+  70     OLP-a        "Oil-fired power"
+  71     GSP-a        "Gas-fired power"
+  72     NUC-a        "Nuclear power"
+  73     HYD-a        "Hydro power"
+  74     SOL-a        "Solar power"
+  75     WND-a        "Wind power"
+  76     XEL-a        "Other power"
+  77     SRV-a        "Services"
+  78  / ;
+  79   
+  80  * >>>> PLACE TO CHANGE COMMODITIES, i.e. model commodities
+  81   
+  82  set comm "Modeled commodities" /
+  83     AGR-c        "Agriculture"
+  84     FRS-c        "Forestry"
+  85     COA-c        "Coal"
+  86     OIL-c        "Oil"
+  87     GAS-c        "Gas"
+  88     OXT-c        "Minerals nec"
+  89     EIT-c        "Vegetable oils and fats"
+  90     XMN-c        "Dairy products"
+  91     P_C-c        "Petroleum and coal products"
+  92     ELY-c        "Electricity"
+  93     SRV-c        "Services"
+  94  / ;
+  95   
+  96  set endw "Modeled production factors" /
+  97     nsk          "Unskilled labor"
+  98     skl          "Skilled labor"
+  99     cap          "Capital"
+ 100     lnd          "Land"
+ 101     nrs          "Natural resource"
+ 102  / ;
+ 103   
+ 104  set stdlab "Standard SAM labels" /
+ 105     TRD          "Trade account"
+ 106     regY         "Regional household"
+ 107     hhd          "Household"
+ 108     gov          "Government"
+ 109     r_d          "Research and development"
+ 110     inv          "Investment"
+ 111     deprY        "Depreciation"
+ 112     tmg          "Trade margins"
+ 113     itax         "Indirect tax"
+ 114     ptax         "Production tax"
+ 115     mtax         "Import tax"
+ 116     etax         "Export tax"
+ 117     vtax         "Taxes on factors of production"
+ 118     ltax         "Taxes on labor use"
+ 119     ktax         "Taxes on capital use"
+ 120     rtax         "Taxes on natural resource use"
+ 121     vsub         "Subsidies on factors of production"
+ 122     wtax         "Waste tax"
+ 123     dtax         "Direct taxation"
+ 124     ctax         "Carbon tax"
+ 125     ntmY         "NTM revenues"
+ 126     bop          "Balance of payments account"
+ 127     tot          "Total for row/column sums"
+ 128  / ;
+ 129   
+ 130  set findem(stdlab) "Final demand accounts" /
+ 131     hhd          "Household"
+ 132     gov          "Government"
+ 133     r_d          "Research and development"
+ 134     inv          "Investment"
+ 135     tmg          "Trade margins"
+ 136  / ;
+ 137   
+ 138  set reg "Modeled regions" /
+ 139     USA          "United States"
+ 140     EUR          "Western Europe"
+ 141     XOE          "Other HIY OECD"
+ 142     CHN          "China"
+ 143     RUS          "Russia"
+ 144     OPC          "Major oil and gas exporters"
+ 145     XEA          "Rest of East Asia and Pacific"
+ 146     SAS          "South Asia"
+ 147     XLC          "Rest of Latin America & Caribbean"
+ 148     ROW          "Rest of the World"
+ 149  / ;
+ 150   
+ 151  set is "SAM accounts for aggregated SAM" /
+ 152   
+ 153  *  User-defined activities
+ 154   
+ 155     set.act
+ 156   
+ 157  *  User-defined commodities
+ 158   
+ 159     set.comm
+ 160   
+ 161  *  User-defined factors
+ 162   
+ 163     set.endw
+ 164   
+ 165  *  Standard SAM accounts
+ 166   
+ 167     set.stdlab
+ 168   
+ 169  *  User-defined regions
+ 170   
+ 171     set.reg
+ 172   
+ 173  / ;
+ 174   
+ 175  alias(is, js) ;
+ 176   
+ 177  set aa(is) "Armington agents" /
+ 178   
+ 179     set.act
+ 180   
+ 181     set.findem
+ 182   
+ 183  / ;
+ 184   
+ 185  set a(aa) "Activities" /
+ 186   
+ 187     set.act
+ 188   
+ 189  / ;
+ 190   
+ 191  set i(is) "Commodities" /
+ 192   
+ 193     set.comm
+ 194   
+ 195  / ;
+ 196   
+ 197  alias(i, j) ;
+ 198   
+ 199  set fp(is) "Factors of production" /
+ 200   
+ 201     set.endw
+ 202   
+ 203  / ;
+ 204   
+ 205  set l(fp) "Labor factors" /
+ 206   
+ 207     nsk          "Unskilled labor"
+ 208     skl          "Skilled labor"
+ 209  / ;
+ 210   
+ 211  *   Subsets ul(l) and sl(l) included for backward compatibility
+ 212   
+ 213  set ul(l) "Unskilled labor" /
+ 214   
+ 215     nsk          "Unskilled labor"
+ 216     skl          "Skilled labor"
+ 217  / ;
+ 218   
+ 219  set sl(l) "Skilled labor" /
+ 220   
+ 221  / ;
+ 222   
+ 223  set wb "Intermediate labor bundle(s)" /
+ 224     Single       "Single intermediate labor bundle"
+ 225  / ;
+ 226   
+ 227  set maplab1(wb) "Mapping of intermediate labor demand bundle(s) to LAB1" /
+ 228     Single       "Single intermediate labor bundle"
+ 229  / ;
+ 230   
+ 231  set mapl(wb,l) "Mapping of labor categories to intermedate demand bundle(s)" /
+ 232     Single   .nsk
+ 233     Single   .skl
+ 234  / ;
+ 235   
+ 236  set lr(l) "Reference labor for skill premium" /
+ 237   
+ 238     skl          "Skilled labor"
+ 239  / ;
+ 240   
+ 241  set cap(fp) "Capital" /
+ 242   
+ 243     cap          "Capital"
+ 244  / ;
+ 245   
+ 246  set lnd(fp) "Land endowment" /
+ 247   
+ 248     lnd          "Land"
+ 249  / ;
+ 250   
+ 251  set nrs(fp) "Natural resource" /
+ 252   
+ 253     nrs          "Natural resource"
+ 254  / ;
+ 255   
+ 256  set wat(fp) "Water resource" /
+ 257   
+ 258  / ;
+ 259   
+ 260  * >>>> CAN MODIFY MOBILE VS. NON-MOBILE FACTORS
+ 261   
+ 262  set fm(fp) "Mobile factors" /
+ 263   
+ 264     nsk          "Unskilled labor"
+ 265     skl          "Skilled labor"
+ 266     cap          "Capital"
+ 267     lnd          "Land"
+ 268     nrs          "Natural resource"
+ 269  / ;
+ 270   
+ 271  set fnm(fp) "Non-mobile factors" /
+ 272   
+ 273  / ;
+ 274   
+ 275  set fd(aa) "Domestic final demand agents" /
+ 276   
+ 277     hhd          "Household"
+ 278     gov          "Government"
+ 279     r_d          "Research and development"
+ 280     inv          "Investment"
+ 281  / ;
+ 282   
+ 283  set h(fd) "Households" /
+ 284     hhd          "Household"
+ 285  / ;
+ 286   
+ 287  singleton set gov(fd) "Government" /
+ 288     gov          "Government"
+ 289  / ;
+ 290   
+ 291  singleton set r_d(fd) "Research and development" /
+ 292     r_d          "Research and development"
+ 293  / ;
+ 294   
+ 295  singleton set inv(fd) "Investment" /
+ 296     inv          "Investment"
+ 297  / ;
+ 298   
+ 299  set fdc(fd) "Final demand accounts with CES expenditure function" /
+ 300     gov          "Government"
+ 301     r_d          "Research and development"
+ 302     inv          "Investment"
+ 303  / ;
+ 304   
+ 305  set r(is) "Regions" /
+ 306   
+ 307     set.reg
+ 308   
+ 309  / ;
+ 310   
+ 311  alias(r, rp) ; alias(r, s) ; alias(r, d) ;
+ 312   
+ 313  * >>>> MUST INSERT RESIDUAL REGION (ONLY ONE)
+ 314   
+ 315  set rres(r) "Residual region" /
+ 316     USA          "United States"
+ 317  / ;
+ 318   
+ 319  * >>>> MUST INSERT MUV REGIONS (ONE OR MORE)
+ 320   
+ 321  set rmuv(r) "MUV regions" /
+ 322     CHN          "China"
+ 323     USA          "United States"
+ 324     EUR          "Western Europe"
+ 325     XOE          "Other HIY OECD"
+ 326  / ;
+ 327   
+ 328  * >>>> MUST INSERT MUV COMMODITIES (ONE OR MORE)
+ 329   
+ 330  set imuv(i) "MUV commodities" /
+ 331     EIT-c
+ 332     XMN-c
+ 333  / ;
+ 334   
+ 335  set ia "Aggregate commodities for model output" /
+ 336     FRS-c        "Forestry"
+ 337     COA-c        "Coal"
+ 338     OIL-c        "Oil"
+ 339     GAS-c        "Gas"
+ 340     OXT-c        "Minerals nec"
+ 341     P_C-c        "Petroleum and coal products"
+ 342     AGR-c        "Agriculture"
+ 343     EIT-c        "Vegetable oils and fats"
+ 344     XMN-c        "Dairy products"
+ 345     SRV-c        "Services"
+ 346     ELY-c        "Electricity"
+ 347   
+ 348     tagr-c       "Agriculture"
+ 349     tman-c       "Manufacturing"
+ 350     tsrv-c       "Services"
+ 351     toth-c       "Other"
+ 352     ttot-c       "Total"
+ 353  / ;
+ 354   
+ 355  set mapi(ia,i) "Mapping for aggregate commodities" /
+ 356     FRS-c    .FRS-c
+ 357     COA-c    .COA-c
+ 358     OIL-c    .OIL-c
+ 359     GAS-c    .GAS-c
+ 360     OXT-c    .OXT-c
+ 361     P_C-c    .P_C-c
+ 362     AGR-c    .AGR-c
+ 363     EIT-c    .EIT-c
+ 364     XMN-c    .XMN-c
+ 365     SRV-c    .SRV-c
+ 366     ELY-c    .ELY-c
+ 367   
+ 368     tagr-c   .FRS-c
+ 369     tagr-c   .AGR-c
+ 370     tman-c   .P_C-c
+ 371     tman-c   .EIT-c
+ 372     tman-c   .XMN-c
+ 373     tsrv-c   .SRV-c
+ 374     tsrv-c   .ELY-c
+ 375     toth-c   .COA-c
+ 376     toth-c   .OIL-c
+ 377     toth-c   .GAS-c
+ 378     toth-c   .OXT-c
+ 379     ttot-c   .FRS-c
+ 380     ttot-c   .COA-c
+ 381     ttot-c   .OIL-c
+ 382     ttot-c   .GAS-c
+ 383     ttot-c   .OXT-c
+ 384     ttot-c   .P_C-c
+ 385     ttot-c   .AGR-c
+ 386     ttot-c   .EIT-c
+ 387     ttot-c   .XMN-c
+ 388     ttot-c   .SRV-c
+ 389     ttot-c   .ELY-c
+ 390  / ;
+ 391   
+ 392  set iaa(ia) "Aggregate commodities only" ;
+ 393  loop((i,ia)$(not sameas(i,ia)), iaa(ia) = yes ; ) ;
+ 394   
+ 395  set aga "Aggregate activities for model output" /
+ 396     FRS-a        "Forestry"
+ 397     COA-a        "Coal"
+ 398     OIL-a        "Oil"
+ 399     GAS-a        "Gas"
+ 400     OXT-a        "Minerals nec"
+ 401     P_C-a        "Petroleum and coal products"
+ 402     AGR-a        "Agriculture"
+ 403     EIT-a        "Vegetable oils and fats"
+ 404     XMN-a        "Dairy products"
+ 405     ETD-a        "Electricity transmission"
+ 406     CLP-a        "Coal-fired power"
+ 407     OLP-a        "Oil-fired power"
+ 408     GSP-a        "Gas-fired power"
+ 409     NUC-a        "Nuclear power"
+ 410     HYD-a        "Hydro power"
+ 411     SOL-a        "Solar power"
+ 412     WND-a        "Wind power"
+ 413     XEL-a        "Other power"
+ 414     SRV-a        "Services"
+ 415   
+ 416     tagr-a       "Agriculture"
+ 417     tman-a       "Manufacturing"
+ 418     tsrv-a       "Services"
+ 419     toth-a       "Other"
+ 420     ttot-a       "Total"
+ 421  / ;
+ 422   
+ 423  set mapaga(aga,a) "Mapping for aggregate activities" /
+ 424     FRS-a    .FRS-a
+ 425     COA-a    .COA-a
+ 426     OIL-a    .OIL-a
+ 427     GAS-a    .GAS-a
+ 428     OXT-a    .OXT-a
+ 429     P_C-a    .P_C-a
+ 430     AGR-a    .AGR-a
+ 431     EIT-a    .EIT-a
+ 432     XMN-a    .XMN-a
+ 433     ETD-a    .ETD-a
+ 434     CLP-a    .CLP-a
+ 435     OLP-a    .OLP-a
+ 436     GSP-a    .GSP-a
+ 437     NUC-a    .NUC-a
+ 438     HYD-a    .HYD-a
+ 439     SOL-a    .SOL-a
+ 440     WND-a    .WND-a
+ 441     XEL-a    .XEL-a
+ 442     SRV-a    .SRV-a
+ 443   
+ 444     tagr-a   .FRS-a
+ 445     tagr-a   .AGR-a
+ 446     tman-a   .P_C-a
+ 447     tman-a   .EIT-a
+ 448     tman-a   .XMN-a
+ 449     tsrv-a   .ETD-a
+ 450     tsrv-a   .CLP-a
+ 451     tsrv-a   .OLP-a
+ 452     tsrv-a   .GSP-a
+ 453     tsrv-a   .NUC-a
+ 454     tsrv-a   .HYD-a
+ 455     tsrv-a   .SOL-a
+ 456     tsrv-a   .WND-a
+ 457     tsrv-a   .XEL-a
+ 458     tsrv-a   .SRV-a
+ 459     toth-a   .COA-a
+ 460     toth-a   .OIL-a
+ 461     toth-a   .GAS-a
+ 462     toth-a   .OXT-a
+ 463     ttot-a   .FRS-a
+ 464     ttot-a   .COA-a
+ 465     ttot-a   .OIL-a
+ 466     ttot-a   .GAS-a
+ 467     ttot-a   .OXT-a
+ 468     ttot-a   .P_C-a
+ 469     ttot-a   .AGR-a
+ 470     ttot-a   .EIT-a
+ 471     ttot-a   .XMN-a
+ 472     ttot-a   .ETD-a
+ 473     ttot-a   .CLP-a
+ 474     ttot-a   .OLP-a
+ 475     ttot-a   .GSP-a
+ 476     ttot-a   .NUC-a
+ 477     ttot-a   .HYD-a
+ 478     ttot-a   .SOL-a
+ 479     ttot-a   .WND-a
+ 480     ttot-a   .XEL-a
+ 481     ttot-a   .SRV-a
+ 482  / ;
+ 483   
+ 484  set agaa(aga) "Aggregate activities only" ;
+ 485  loop((a,aga)$(not sameas(a,aga)), agaa(aga) = yes ; ) ;
+ 486   
+ 487  set ra "Aggregate regions for emission regimes and model output" /
+ 488     CHN          "China"
+ 489     XEA          "Rest of East Asia and Pacific"
+ 490     USA          "United States"
+ 491     RUS          "Russia"
+ 492     EUR          "Western Europe"
+ 493     XOE          "Other HIY OECD"
+ 494     OPC          "Major oil and gas exporters"
+ 495     SAS          "South Asia"
+ 496     XLC          "Rest of Latin America & Caribbean"
+ 497     ROW          "Rest of the World"
+ 498   
+ 499     hic          "High-income countries"
+ 500     lmy          "Developing countries"
+ 501     wld          "World Total"
+ 502  / ;
+ 503   
+ 504  set mapr(ra,r) "Mapping for aggregate regions" /
+ 505     CHN      .CHN
+ 506     XEA      .XEA
+ 507     USA      .USA
+ 508     RUS      .RUS
+ 509     EUR      .EUR
+ 510     XOE      .XOE
+ 511     OPC      .OPC
+ 512     SAS      .SAS
+ 513     XLC      .XLC
+ 514     ROW      .ROW
+ 515   
+ 516     hic      .USA
+ 517     hic      .EUR
+ 518     hic      .XOE
+ 519     lmy      .CHN
+ 520     lmy      .XEA
+ 521     lmy      .RUS
+ 522     lmy      .OPC
+ 523     lmy      .SAS
+ 524     lmy      .XLC
+ 525     lmy      .ROW
+ 526     wld      .CHN
+ 527     wld      .XEA
+ 528     wld      .USA
+ 529     wld      .RUS
+ 530     wld      .EUR
+ 531     wld      .XOE
+ 532     wld      .OPC
+ 533     wld      .SAS
+ 534     wld      .XLC
+ 535     wld      .ROW
+ 536  / ;
+ 537   
+ 538  set rra(ra) "Aggregate regions only" ;
+ 539  loop((r,ra)$(not sameas(r,ra)), rra(ra) = yes ; ) ;
+ 540   
+ 541  set lagg "Aggregate labor for output" /
+ 542     nsk          "Unskilled labor"
+ 543     skl          "Skilled labor"
+ 544   
+ 545     tot          "Total labor"
+ 546  / ;
+ 547   
+ 548  set maplagg(lagg,l) "Mapping for aggregate regions" /
+ 549     nsk      .nsk
+ 550     skl      .skl
+ 551   
+ 552     tot      .nsk
+ 553     tot      .skl
+ 554  / ;
+ 555   
+ 556  * >>>> CAN CHANGE ACTIVITY MAPPING
+ 557   
+ 558  set mapa0(a0, a) "Mapping from original activities to new activities" /
+ 559     FRS     .FRS-a
+ 560     COA     .COA-a
+ 561     OIL     .OIL-a
+ 562     GAS     .GAS-a
+ 563     OXT     .OXT-a
+ 564     P_C     .P_C-a
+ 565     AGR     .AGR-a
+ 566     EIT     .EIT-a
+ 567     XMN     .XMN-a
+ 568     ETD     .ETD-a
+ 569     CLP     .CLP-a
+ 570     OLP     .OLP-a
+ 571     GSP     .GSP-a
+ 572     NUC     .NUC-a
+ 573     HYD     .HYD-a
+ 574     SOL     .SOL-a
+ 575     WND     .WND-a
+ 576     XEL     .XEL-a
+ 577     SRV     .SRV-a
+ 578  / ;
+ 579   
+ 580  * >>>> CAN CHANGE COMMODITY MAPPING
+ 581   
+ 582  set mapi0(i0, i) "Mapping from original commodities to new commodities" /
+ 583     FRS     .FRS-c
+ 584     COA     .COA-c
+ 585     OIL     .OIL-c
+ 586     GAS     .GAS-c
+ 587     OXT     .OXT-c
+ 588     P_C     .P_C-c
+ 589     AGR     .AGR-c
+ 590     EIT     .EIT-c
+ 591     XMN     .XMN-c
+ 592     ETD     .ELY-c
+ 593     CLP     .ELY-c
+ 594     OLP     .ELY-c
+ 595     GSP     .ELY-c
+ 596     NUC     .ELY-c
+ 597     HYD     .ELY-c
+ 598     SOL     .ELY-c
+ 599     WND     .ELY-c
+ 600     XEL     .ELY-c
+ 601     SRV     .SRV-c
+ 602  / ;
+ 603   
+ 604  set var "GDP variables" /
+ 605     GDP          "GDP in million $2007 MER"
+ 606     GDPpc        "GDP per capita in $2007 MER"
+ 607     gdpppp05     "GDP in $2005 PPP"
+ 608     gdppcppp05   "GDP per capita in $2005"
+ 609  / ;
+ 610   
+ 611  set scen "Scenarios" /
+ 612     SSP1         "Sustainable development"
+ 613     SSP2         "Middle of the road"
+ 614     SSP3         "Regional rivalry"
+ 615     SSP4         "Inequality"
+ 616     SSP5         "Fossil-fueled development"
+ 617     UNMED2010    "UN Population Division Medium Variant 2010 revision"
+ 618     UNMED2012    "UN Population Division Medium Variant 2012 revision"
+ 619     UNMED2015    "UN Population Division Medium Variant 2015 revision"
+ 620     UNMED2017    "UN Population Division Medium Variant 2017 revision"
+ 621     UNMED2019    "UN Population Division Medium Variant 2019 revision"
+ 622     GIDD         "GIDD population projection"
+ 623  / ;
+ 624   
+ 625  set ssp(scen) "SSP Scenarios" /
+ 626     SSP1         "Sustainable development"
+ 627     SSP2         "Middle of the road"
+ 628     SSP3         "Regional rivalry"
+ 629     SSP4         "Inequality"
+ 630     SSP5         "Fossil-fueled development"
+ 631  / ;
+ 632   
+ 633  set mod "Models" /
+ 634     OECD         "OECD-based SSPs"
+ 635     IIASA        "IIASA-based SSPs"
+ 636  / ;
+ 637   
+ 638  set tranche "Population cohorts" /
+ 639     PLT15        "Population less than 15"
+ 640     P1564        "Population aged 15 to 64"
+ 641     P65UP        "Population 65 and over"
+ 642     PTOTL        "Total population"
+ 643  / ;
+ 644   
+ 645  set trs(tranche) "Population cohorts" /
+ 646     PLT15        "Population less than 15"
+ 647     P1564        "Population aged 15 to 64"
+ 648     P65UP        "Population 65 and over"
+ 649  / ;
+ 650   
+ 651  set sex   "Gender categories" /
+ 652     MAL          "Male"
+ 653     FEM          "Female"
+ 654     BOTH         "M+F"
+ 655  / ;
+ 656   
+ 657  set sexx(sex) "Gender categories excl total" /
+ 658     MAL          "Male"
+ 659     FEM          "Female"
+ 660  / ;
+ 661   
+ 662  set ed "Combined SSP/GIDD education levels" /
+ 663     elev0        "ENONE/EDUC0_6"
+ 664     elev1        "EPRIM/EDUC6_9"
+ 665     elev2        "ESECN/EDUC9UP"
+ 666     elev3        "ETERT"
+ 667     elevt        "Total"
+ 668  / ;
+ 669   
+ 670  set edx(ed) "Education levels excluding totals" /
+ 671     elev0        "ENONE/EDUC0_6"
+ 672     elev1        "EPRIM/EDUC6_9"
+ 673     elev2        "ESECN/EDUC9UP"
+ 674     elev3        "ETERT"
+ 675  / ;
+ 676   
+ 677  set nsk(l) "Unskilled types for labor growth assumptions" /
+ 678     nsk          "Unskilled labor"
+ 679  / ;
+ 680   
+ 681  set skl(l)  "Skill types for labor growth assumptions" /
+ 682     skl          "Skilled labor"
+ 683  / ;
+ 684   
+ 685  set educMap(r,l,ed) "Mapping of skills to education levels" /
+ 686     CHN      .nsk     .elev0
+ 687     CHN      .skl     .elev1
+ 688     CHN      .skl     .elev2
+ 689     XEA      .nsk     .elev0
+ 690     XEA      .skl     .elev1
+ 691     XEA      .skl     .elev2
+ 692     USA      .nsk     .elev0
+ 693     USA      .nsk     .elev1
+ 694     USA      .skl     .elev2
+ 695     RUS      .nsk     .elev0
+ 696     RUS      .skl     .elev1
+ 697     RUS      .skl     .elev2
+ 698     EUR      .nsk     .elev0
+ 699     EUR      .nsk     .elev1
+ 700     EUR      .skl     .elev2
+ 701     XOE      .nsk     .elev0
+ 702     XOE      .nsk     .elev1
+ 703     XOE      .skl     .elev2
+ 704     OPC      .nsk     .elev0
+ 705     OPC      .skl     .elev1
+ 706     OPC      .skl     .elev2
+ 707     SAS      .nsk     .elev0
+ 708     SAS      .skl     .elev1
+ 709     SAS      .skl     .elev2
+ 710     XLC      .nsk     .elev0
+ 711     XLC      .skl     .elev1
+ 712     XLC      .skl     .elev2
+ 713     ROW      .nsk     .elev0
+ 714     ROW      .skl     .elev1
+ 715     ROW      .skl     .elev2
+ 716  / ;
+ 717   
+ 718  set sortOrder / sort1*sort68 / ;
+ 719   
+ 720  set mapOrder(sortOrder,is) /
+ 721  sort1.AGR-a
+ 722  sort2.FRS-a
+ 723  sort3.COA-a
+ 724  sort4.OIL-a
+ 725  sort5.GAS-a
+ 726  sort6.OXT-a
+ 727  sort7.EIT-a
+ 728  sort8.XMN-a
+ 729  sort9.P_C-a
+ 730  sort10.ETD-a
+ 731  sort11.CLP-a
+ 732  sort12.OLP-a
+ 733  sort13.GSP-a
+ 734  sort14.NUC-a
+ 735  sort15.HYD-a
+ 736  sort16.SOL-a
+ 737  sort17.WND-a
+ 738  sort18.XEL-a
+ 739  sort19.SRV-a
+ 740  sort20.AGR-c
+ 741  sort21.FRS-c
+ 742  sort22.COA-c
+ 743  sort23.OIL-c
+ 744  sort24.GAS-c
+ 745  sort25.OXT-c
+ 746  sort26.EIT-c
+ 747  sort27.XMN-c
+ 748  sort28.P_C-c
+ 749  sort29.ELY-c
+ 750  sort30.SRV-c
+ 751  sort31.nsk
+ 752  sort32.skl
+ 753  sort33.cap
+ 754  sort34.lnd
+ 755  sort35.nrs
+ 756  sort36.TRD
+ 757  sort37.regY
+ 758  sort38.hhd
+ 759  sort39.gov
+ 760  sort40.r_d
+ 761  sort41.inv
+ 762  sort42.deprY
+ 763  sort43.tmg
+ 764  sort44.itax
+ 765  sort45.ptax
+ 766  sort46.mtax
+ 767  sort47.etax
+ 768  sort48.vtax
+ 769  sort49.ltax
+ 770  sort50.ktax
+ 771  sort51.rtax
+ 772  sort52.vsub
+ 773  sort53.wtax
+ 774  sort54.dtax
+ 775  sort55.ctax
+ 776  sort56.ntmY
+ 777  sort57.bop
+ 778  sort58.tot
+ 779  sort59.USA
+ 780  sort60.EUR
+ 781  sort61.XOE
+ 782  sort62.CHN
+ 783  sort63.RUS
+ 784  sort64.OPC
+ 785  sort65.XEA
+ 786  sort66.SAS
+ 787  sort67.XLC
+ 788  sort68.ROW
+ 789  / ;
+ 790   
+ 791  set gy(is) "Government revenue streams" /
+ 792     itax        "Indirect taxes"
+ 793     ptax        "Production taxes"
+ 794     vtax        "Factor taxes"
+ 795     mtax        "Import taxes"
+ 796     etax        "Export taxes"
+ 797     wtax        "Waste taxes"
+ 798     ctax        "Carbon taxes"
+ 799     dtax        "Direct taxes"
+ 800  / ;
+ 801   
+ 802  set itx(gy) / itax / ;
+ 803  set ptx(gy) / ptax / ;
+ 804  set vtx(gy) / vtax / ;
+ 805  set mtx(gy) / mtax / ;
+ 806  set etx(gy) / etax / ;
+ 807  set wtx(gy) / wtax / ;
+ 808  set ctx(gy) / ctax / ;
+ 809  set dtx(gy) / dtax / ;
+ 810   
+ 811  set tot(is) "Total" /
+ 812     tot         "Total for row/column sums"
+ 813  / ;
+ 814   
+ 815  set acr(a) "Crop activities" /
+ 816  / ;
+ 817   
+ 818  set alv(a) "Livestock activities" /
+ 819  / ;
+ 820   
+ 821  set ax(a) "All other activities" /
+ 822     FRS-a        "Forestry"
+ 823     COA-a        "Coal"
+ 824     OIL-a        "Oil"
+ 825     GAS-a        "Gas"
+ 826     OXT-a        "Minerals nec"
+ 827     P_C-a        "Petroleum and coal products"
+ 828     AGR-a        "Agriculture"
+ 829     EIT-a        "Vegetable oils and fats"
+ 830     XMN-a        "Dairy products"
+ 831     ETD-a        "Electricity transmission"
+ 832     CLP-a        "Coal-fired power"
+ 833     OLP-a        "Oil-fired power"
+ 834     GSP-a        "Gas-fired power"
+ 835     NUC-a        "Nuclear power"
+ 836     HYD-a        "Hydro power"
+ 837     SOL-a        "Solar power"
+ 838     WND-a        "Wind power"
+ 839     XEL-a        "Other power"
+ 840     SRV-a        "Services"
+ 841  / ;
+ 842   
+ 843  set agr(a) "Agricultural activities" /
+ 844     AGR-a        "Agriculture"
+ 845  / ;
+ 846   
+ 847  set man(a) "Manufacturing activities" /
+ 848     EIT-a        "Vegetable oils and fats"
+ 849     XMN-a        "Dairy products"
+ 850  / ;
+ 851   
+ 852  set srv(a) "Service activities" /
+ 853     FRS-a        "Forestry"
+ 854     COA-a        "Coal"
+ 855     OIL-a        "Oil"
+ 856     GAS-a        "Gas"
+ 857     OXT-a        "Minerals nec"
+ 858     P_C-a        "Petroleum and coal products"
+ 859     ETD-a        "Electricity transmission"
+ 860     CLP-a        "Coal-fired power"
+ 861     OLP-a        "Oil-fired power"
+ 862     GSP-a        "Gas-fired power"
+ 863     NUC-a        "Nuclear power"
+ 864     HYD-a        "Hydro power"
+ 865     SOL-a        "Solar power"
+ 866     WND-a        "Wind power"
+ 867     XEL-a        "Other power"
+ 868     SRV-a        "Services"
+ 869  / ;
+ 870   
+ 871  set aenergy(a) "Energy activities" /
+ 872     COA-a        "Coal"
+ 873     OIL-a        "Oil"
+ 874     GAS-a        "Gas"
+ 875     P_C-a        "Petroleum and coal products"
+ 876     ETD-a        "Electricity transmission"
+ 877     CLP-a        "Coal-fired power"
+ 878     OLP-a        "Oil-fired power"
+ 879     GSP-a        "Gas-fired power"
+ 880     NUC-a        "Nuclear power"
+ 881     HYD-a        "Hydro power"
+ 882     SOL-a        "Solar power"
+ 883     WND-a        "Wind power"
+ 884     XEL-a        "Other power"
+ 885  / ;
+ 886   
+ 887  set affl(a) "Fossil fuel activities" /
+ 888     COA-a        "Coal"
+ 889     OIL-a        "Oil"
+ 890     GAS-a        "Gas"
+ 891  / ;
+ 892   
+ 893  set aw(a) "Water services activities" /
+ 894  / ;
+ 895   
+ 896  set z "Labor market zones" /
+ 897     rur          "Agricultural sectors"
+ 898     urb          "Non-agricultural sectors"
+ 899     nsg          "Non-segmented labor markets"
+ 900  / ;
+ 901   
+ 902  set rur(z) "Rural zone" /
+ 903     rur          "Agricultural sectors"
+ 904  / ;
+ 905   
+ 906  set urb(z) "Urban zone" /
+ 907     urb          "Non-agricultural sectors"
+ 908  / ;
+ 909   
+ 910  set nsg(z) "Both zones" /
+ 911     nsg          "Non-segmented labor markets"
+ 912  / ;
+ 913   
+ 914  set mapz(z,a) "Mapping of activities to zones" /
+ 915     rur.AGR-a
+ 916     urb.FRS-a
+ 917     urb.COA-a
+ 918     urb.OIL-a
+ 919     urb.GAS-a
+ 920     urb.OXT-a
+ 921     urb.P_C-a
+ 922     urb.EIT-a
+ 923     urb.XMN-a
+ 924     urb.ETD-a
+ 925     urb.CLP-a
+ 926     urb.OLP-a
+ 927     urb.GSP-a
+ 928     urb.NUC-a
+ 929     urb.HYD-a
+ 930     urb.SOL-a
+ 931     urb.WND-a
+ 932     urb.XEL-a
+ 933     urb.SRV-a
+ 934  / ;
+ 935   
+ 936  mapz("nsg", a) = yes ;
+ 937   
+ 938  set frt(i) "Fertilizer commodities" /
+ 939  / ;
+ 940   
+ 941  set feed(i) "Feed commodities" /
+ 942  / ;
+ 943   
+ 944  set iw(i) "Water services commodities" /
+ 945  / ;
+ 946   
+ 947  set e(i) "Energy commodities" /
+ 948     COA-c        "Coal"
+ 949     OIL-c        "Oil"
+ 950     GAS-c        "Gas"
+ 951     P_C-c        "Petroleum and coal products"
+ 952     ELY-c        "Electricity"
+ 953  / ;
+ 954   
+ 955  set elyc(i) "Electricity commodities" /
+ 956     ELY-c        "Electricity"
+ 957  / ;
+ 958   
+ 959  set fuel(e) "Fuel commodities" /
+ 960     COA-c        "COA"
+ 961     OIL-c        "OIL"
+ 962     GAS-c        "GAS"
+ 963     P_C-c        "P_C"
+ 964  / ;
+ 965   
+ 966  set img(i) "Margin commodities" /
+ 967     SRV-c        "Services"
+ 968  / ;
+ 969   
+ 970  set k "Household commodities" /
+ 971     OXT-k        "Minerals nec"
+ 972     AGR-k        "Agriculture"
+ 973     EIT-k        "Energy intensive goods"
+ 974     XMN-k        "Other manufacturing"
+ 975     SRV-k        "Services"
+ 976     nrg-k        "Energy"
+ 977  / ;
+ 978   
+ 979  set fud(k) "Household food commodities" /
+ 980     AGR-k        "Agriculture"
+ 981  / ;
+ 982   
+ 983  set mapk(i,k) "Mapping from i to k" /
+ 984     FRS-c    .OXT-k
+ 985     COA-c    .nrg-k
+ 986     OIL-c    .nrg-k
+ 987     GAS-c    .nrg-k
+ 988     OXT-c    .OXT-k
+ 989     P_C-c    .nrg-k
+ 990     AGR-c    .AGR-k
+ 991     EIT-c    .EIT-k
+ 992     XMN-c    .XMN-k
+ 993     SRV-c    .SRV-k
+ 994     ELY-c    .nrg-k
+ 995  / ;
+ 996   
+ 997  set CPINDX "Categories of CPI indices" /
+ 998     tot        "Total price index"
+ 999  / ;
+1000   
+1001  set mapCPI(cpindx,i) "Mapping from i to CPINDX" /
+1002     tot    .FRS-c
+1003     tot    .COA-c
+1004     tot    .OIL-c
+1005     tot    .GAS-c
+1006     tot    .OXT-c
+1007     tot    .P_C-c
+1008     tot    .AGR-c
+1009     tot    .EIT-c
+1010     tot    .XMN-c
+1011     tot    .SRV-c
+1012     tot    .ELY-c
+1013  / ;
+1014   
+1015  set elya(a) "Power activities" /
+1016     ETD-a        "Electricity transmission"
+1017     CLP-a        "Coal-fired power"
+1018     OLP-a        "Oil-fired power"
+1019     GSP-a        "Gas-fired power"
+1020     NUC-a        "Nuclear power"
+1021     HYD-a        "Hydro power"
+1022     SOL-a        "Solar power"
+1023     WND-a        "Wind power"
+1024     XEL-a        "Other power"
+1025  / ;
+1026   
+1027  set etd(a) "Electricity transmission and distribution activities" /
+1028     ETD-a        "Electricity transmission"
+1029  / ;
+1030   
+1031  set primElya(a) "Primary power activities" /
+1032     NUC-a        "NUC"
+1033     HYD-a        "HYD"
+1034     SOL-a        "SOL"
+1035     WND-a        "WND"
+1036     XEL-a        "XEL"
+1037  / ;
+1038   
+1039  set pb "Power bundles in power aggregation" /
+1040     GasP         "Gas bundle"
+1041     OilP         "Oil bundle"
+1042     coap         "Coal bundle"
+1043     nucp         "Nuclear"
+1044     hydp         "Hydro"
+1045     renp         "Renewables"
+1046  / ;
+1047   
+1048  set mappow(pb,elya) "Mapping of power activities to power bundles" /
+1049     GasP     .GSP-a
+1050     OilP     .OLP-a
+1051     coap     .CLP-a
+1052     nucp     .NUC-a
+1053     hydp     .HYD-a
+1054     renp     .SOL-a
+1055     renp     .WND-a
+1056     renp     .XEL-a
+1057  / ;
+1058   
+1059  set lb "Land bundles" /
+1060     AGR          "Agriculture"
+1061  / ;
+1062   
+1063  set lb1(lb) "First land bundle" /
+1064     AGR          "Agriculture"
+1065  / ;
+1066   
+1067  set maplb(lb,a) "Mapping of activities to land bundles" /
+1068     AGR      .AGR-a
+1069  / ;
+1070   
+1071  set lh "Market condition flags" /
+1072     lo    "Market downswing"
+1073     hi    "Market upswing"
+1074  / ;
+1075   
+1076  set wbnd "Aggregate water markets" /
+1077     N_A          "N_A"
+1078  / ;
+1079   
+1080  set wbnd1(wbnd) "Top level water markets" /
+1081  / ;
+1082   
+1083  set wbnd2(wbnd) "Second level water markets" /
+1084  / ;
+1085   
+1086  set wbndex(wbnd) "Second level water markets" /
+1087  / ;
+1088   
+1089  set mapw1(wbnd,wbnd) "Mapping of first level water bundles" /
+1090  / ;
+1091   
+1092  set mapw2(wbnd,a) "Mapping of second level water bundle" /
+1093  / ;
+1094   
+1095  set wbnda(wbnd) "Water bundles mapped one-to-one to activities" /
+1096  / ;
+1097   
+1098  set wbndi(wbnd) "Water bundles mapped to aggregate output" /
+1099  / ;
+1100   
+1101  set NRG "Energy bundles used in model" /
+1102     COA          "Coal"
+1103     OIL          "Oil"
+1104     GAS          "Gas"
+1105     ELY          "Electricity"
+1106  / ;
+1107   
+1108  set coa(NRG) "Coal bundle used in model" /
+1109     COA          "Coal"
+1110  / ;
+1111   
+1112  set oil(NRG) "Oil bundle used in model" /
+1113     OIL          "Oil"
+1114  / ;
+1115   
+1116  set gas(NRG) "Gas bundle used in model" /
+1117     GAS          "Gas"
+1118  / ;
+1119   
+1120  set ely(NRG) "Electricity bundle used in model" /
+1121     ELY          "Electricity"
+1122  / ;
+1123   
+1124  set mape(NRG,e) "Mapping of energy commodities to energy bundles" /
+1125     COA      .COA-c
+1126     OIL      .OIL-c
+1127     OIL      .P_C-c
+1128     GAS      .GAS-c
+1129     ELY      .ELY-c
+1130  / ;
+1131   
+1132  set pt "Price trends" / lo, mid, ref, hi / ;
+1133   
+1134  set em "Emission types" /
+1135     co2          "Carbon emissions"
+1136     n2o          "N2O emissions"
+1137     ch4          "Methane emissions"
+1138     fgas         "Emissions of fluoridated gases"
+1139     bc           "Black carbon (Gg)"
+1140     co           "Carbon monoxide (Gg)"
+1141     nh3          "Ammonia (Gg)"
+1142     nmvoc        "Non-methane volatile organic compounds (Gg)"
+1143     nox          "Nitrogen oxides (Gg)"
+1144     oc           "Organic carbon (Gg)"
+1145     pm10         "Particulate matter 10 (Gg)"
+1146     pm2_5        "Particulate matter 2.5"
+1147     so2          "Sulfur dioxide (Gg)"
+1148  / ;
+1149   
+1150  set emn(em) "Non-CO2 emission types" /
+1151     n2o          "N2O emissions"
+1152     ch4          "Methane emissions"
+1153     fgas         "Emissions of fluoridated gases"
+1154     bc           "Black carbon (Gg)"
+1155     co           "Carbon monoxide (Gg)"
+1156     nh3          "Ammonia (Gg)"
+1157     nmvoc        "Non-methane volatile organic compounds (Gg)"
+1158     nox          "Nitrogen oxides (Gg)"
+1159     oc           "Organic carbon (Gg)"
+1160     pm10         "Particulate matter 10 (Gg)"
+1161     pm2_5        "Particulate matter 2.5"
+1162     so2          "Sulfur dioxide (Gg)"
+1163  / ;
+1164   
+1165  set ghg(em) "Greenhouse gas emission types" /
+1166     co2          "Carbon emissions"
+1167     n2o          "N2O emissions"
+1168     ch4          "Methane emissions"
+1169     fgas         "Emissions of fluoridated gases"
+1170  / ;
+1171   
+1172  set nghg(em) "Non greenhouse gas emission types" /
+1173     bc           "Black carbon (Gg)"
+1174     co           "Carbon monoxide (Gg)"
+1175     nh3          "Ammonia (Gg)"
+1176     nmvoc        "Non-methane volatile organic compounds (Gg)"
+1177     nox          "Nitrogen oxides (Gg)"
+1178     oc           "Organic carbon (Gg)"
+1179     pm10         "Particulate matter 10 (Gg)"
+1180     pm2_5        "Particulate matter 2.5"
+1181     so2          "Sulfur dioxide (Gg)"
+1182  / ;
+1183   
+1184  set emq "Emission control aggregations" /
+1185     CO2         "Carbon dioxide"
+1186     CO2e        "Carbon dioxide equivalent"
+1187  / ;
+1188   
+1189  set mapEM(emq,em) /
+1190  CO2.CO2
+1191  / ;
+1192   
+1193  mapEM("CO2e",em)$ghg(em) = yes ;
+1194   
+1195  set mapi1(i,a) "Mapping of commodities to ND1 bundle" /
+1196     FRS-c    .FRS-a
+1197     OXT-c    .FRS-a
+1198     AGR-c    .FRS-a
+1199     EIT-c    .FRS-a
+1200     XMN-c    .FRS-a
+1201     SRV-c    .FRS-a
+1202     FRS-c    .COA-a
+1203     OXT-c    .COA-a
+1204     AGR-c    .COA-a
+1205     EIT-c    .COA-a
+1206     XMN-c    .COA-a
+1207     SRV-c    .COA-a
+1208     FRS-c    .OIL-a
+1209     OXT-c    .OIL-a
+1210     AGR-c    .OIL-a
+1211     EIT-c    .OIL-a
+1212     XMN-c    .OIL-a
+1213     SRV-c    .OIL-a
+1214     FRS-c    .GAS-a
+1215     OXT-c    .GAS-a
+1216     AGR-c    .GAS-a
+1217     EIT-c    .GAS-a
+1218     XMN-c    .GAS-a
+1219     SRV-c    .GAS-a
+1220     FRS-c    .OXT-a
+1221     OXT-c    .OXT-a
+1222     AGR-c    .OXT-a
+1223     EIT-c    .OXT-a
+1224     XMN-c    .OXT-a
+1225     SRV-c    .OXT-a
+1226     FRS-c    .P_C-a
+1227     OXT-c    .P_C-a
+1228     AGR-c    .P_C-a
+1229     EIT-c    .P_C-a
+1230     XMN-c    .P_C-a
+1231     SRV-c    .P_C-a
+1232     FRS-c    .AGR-a
+1233     OXT-c    .AGR-a
+1234     AGR-c    .AGR-a
+1235     EIT-c    .AGR-a
+1236     XMN-c    .AGR-a
+1237     SRV-c    .AGR-a
+1238     FRS-c    .EIT-a
+1239     OXT-c    .EIT-a
+1240     AGR-c    .EIT-a
+1241     EIT-c    .EIT-a
+1242     XMN-c    .EIT-a
+1243     SRV-c    .EIT-a
+1244     FRS-c    .XMN-a
+1245     OXT-c    .XMN-a
+1246     AGR-c    .XMN-a
+1247     EIT-c    .XMN-a
+1248     XMN-c    .XMN-a
+1249     SRV-c    .XMN-a
+1250     FRS-c    .ETD-a
+1251     OXT-c    .ETD-a
+1252     AGR-c    .ETD-a
+1253     EIT-c    .ETD-a
+1254     XMN-c    .ETD-a
+1255     SRV-c    .ETD-a
+1256     FRS-c    .CLP-a
+1257     OXT-c    .CLP-a
+1258     AGR-c    .CLP-a
+1259     EIT-c    .CLP-a
+1260     XMN-c    .CLP-a
+1261     SRV-c    .CLP-a
+1262     FRS-c    .OLP-a
+1263     OXT-c    .OLP-a
+1264     AGR-c    .OLP-a
+1265     EIT-c    .OLP-a
+1266     XMN-c    .OLP-a
+1267     SRV-c    .OLP-a
+1268     FRS-c    .GSP-a
+1269     OXT-c    .GSP-a
+1270     AGR-c    .GSP-a
+1271     EIT-c    .GSP-a
+1272     XMN-c    .GSP-a
+1273     SRV-c    .GSP-a
+1274     FRS-c    .NUC-a
+1275     OXT-c    .NUC-a
+1276     AGR-c    .NUC-a
+1277     EIT-c    .NUC-a
+1278     XMN-c    .NUC-a
+1279     SRV-c    .NUC-a
+1280     FRS-c    .HYD-a
+1281     OXT-c    .HYD-a
+1282     AGR-c    .HYD-a
+1283     EIT-c    .HYD-a
+1284     XMN-c    .HYD-a
+1285     SRV-c    .HYD-a
+1286     FRS-c    .SOL-a
+1287     OXT-c    .SOL-a
+1288     AGR-c    .SOL-a
+1289     EIT-c    .SOL-a
+1290     XMN-c    .SOL-a
+1291     SRV-c    .SOL-a
+1292     FRS-c    .WND-a
+1293     OXT-c    .WND-a
+1294     AGR-c    .WND-a
+1295     EIT-c    .WND-a
+1296     XMN-c    .WND-a
+1297     SRV-c    .WND-a
+1298     FRS-c    .XEL-a
+1299     OXT-c    .XEL-a
+1300     AGR-c    .XEL-a
+1301     EIT-c    .XEL-a
+1302     XMN-c    .XEL-a
+1303     SRV-c    .XEL-a
+1304     FRS-c    .SRV-a
+1305     OXT-c    .SRV-a
+1306     AGR-c    .SRV-a
+1307     EIT-c    .SRV-a
+1308     XMN-c    .SRV-a
+1309     SRV-c    .SRV-a
+1310  / ;
+1311   
+1312  set mapi2(i,a) "Mapping of commodities to ND2 bundle" /
+1313  / ;
+1314   
+1315  set GHGCodes "GHG codes from WB WDI database" /
+1316     co2          "CO2 emissions (mt)"
+1317     n2o          "Nitrous oxide emissions (mt of CO2 equivalent)"
+1318     ch4          "Methane emissions (mt of CO2 equivalent)"
+1319     fgas         "Other greenhouse gas emissions, HFC, PFC and SF6 (megaton ton of CO2 equivalent)"
+1320     NRGUSE       "Energy use (kg of oil equivalent per capita)"
+1321     GHGT         "Total greenhouse gas emissions (mt of CO2 equivalent)"
+1322     HFC          "HFC gas emissions (mt of CO2 equivalent)"
+1323     PFC          "PFC gas emissions (mt ton of CO2 equivalent)"
+1324     SF6          "SF6 gas emissions (mt of CO2 equivalent)"
+1325     LUCFNET      "GHG net emissions/removals by LUCF (Mt of CO2 equivalent)"
+1326  / ;
+1327   
+1328  set rq(ra) "Regions submitted to an emissions cap" ;
+1329  rq(ra) = no ;
+1330   
+1331  set aets "Agent specific ETS coalitions" /
+1332     All        "ALL agents"
+1333  / ;
+1334   
+1335  set mapETS(aets,aa) "Mapping of agents to ETS coalitions" /
+1336     All    .FRS-a
+1337     All    .COA-a
+1338     All    .OIL-a
+1339     All    .GAS-a
+1340     All    .OXT-a
+1341     All    .P_C-a
+1342     All    .hhd
+1343     All    .gov
+1344     All    .r_d
+1345     All    .inv
+1346     All    .tmg
+1347     All    .AGR-a
+1348     All    .EIT-a
+1349     All    .XMN-a
+1350     All    .ETD-a
+1351     All    .CLP-a
+1352     All    .OLP-a
+1353     All    .GSP-a
+1354     All    .NUC-a
+1355     All    .HYD-a
+1356     All    .SOL-a
+1357     All    .WND-a
+1358     All    .XEL-a
+1359     All    .SRV-a
+1360  / ;
+1361  mapETS("All", aa) = yes ;
+1362   
+INCLUDE    F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\tmpSets.gms
+1365   
+1366  set actf "Modeled activities" /
+1367     FRS          "Forestry"
+1368     COA          "Coal"
+1369     OIL          "Oil"
+1370     GAS          "Gas"
+1371     OXT          "Minerals nec"
+1372     P_C          "Petroleum and coal products"
+1373     AGR          "Agriculture"
+1374     EIT          "Vegetable oils and fats"
+1375     XMN          "Dairy products"
+1376     ETD          "Electricity transmission"
+1377     CLP          "Coal-fired power"
+1378     OLP          "Oil-fired power"
+1379     GSP          "Gas-fired power"
+1380     NUC          "Nuclear power"
+1381     HYD          "Hydro power"
+1382     SOL          "Solar power"
+1383     WND          "Wind power"
+1384     XEL          "Other power"
+1385     SRV          "Services"
+1386  / ;
+1387   
+1388  set mapact(a,actf) "Activity mapping" /
+1389     FRS-a.FRS
+1390     COA-a.COA
+1391     OIL-a.OIL
+1392     GAS-a.GAS
+1393     OXT-a.OXT
+1394     P_C-a.P_C
+1395     AGR-a.AGR
+1396     EIT-a.EIT
+1397     XMN-a.XMN
+1398     ETD-a.ETD
+1399     CLP-a.CLP
+1400     OLP-a.OLP
+1401     GSP-a.GSP
+1402     NUC-a.NUC
+1403     HYD-a.HYD
+1404     SOL-a.SOL
+1405     WND-a.WND
+1406     XEL-a.XEL
+1407     SRV-a.SRV
+1408  / ;
+1409   
+1410  set commf "Modeled commodities" /
+1411     FRS          "Forestry"
+1412     COA          "Coal"
+1413     OIL          "Oil"
+1414     GAS          "Gas"
+1415     OXT          "Minerals nec"
+1416     P_C          "Petroleum and coal products"
+1417     AGR          "Agriculture"
+1418     EIT          "Vegetable oils and fats"
+1419     XMN          "Dairy products"
+1420     SRV          "Services"
+1421     ELY          "Electricity"
+1422  / ;
+1423   
+1424  set mapcomm(i,commf) "Commodity mapping" /
+1425     FRS-c.FRS
+1426     COA-c.COA
+1427     OIL-c.OIL
+1428     GAS-c.GAS
+1429     OXT-c.OXT
+1430     P_C-c.P_C
+1431     AGR-c.AGR
+1432     EIT-c.EIT
+1433     XMN-c.XMN
+1434     SRV-c.SRV
+1435     ELY-c.ELY
+1436  / ;
+1437   
+1438  set elycf(commf) "Electricity commodities" /
+1439     ELY          "Electricity"
+1440  / ;
+1441   
+1442  set kf "Household commodities" /
+1443     OXT          "Minerals nec"
+1444     AGR          "Agriculture"
+1445     EIT          "Energy intensive goods"
+1446     XMN          "Other manufacturing"
+1447     SRV          "Services"
+1448     nrg          "Energy"
+1449  / ;
+1450   
+1451  set mapkcomm(k,kf) "Household commodity mapping" /
+1452     OXT-k.OXT
+1453     AGR-k.AGR
+1454     EIT-k.EIT
+1455     XMN-k.XMN
+1456     SRV-k.SRV
+1457     nrg-k.nrg
+1458  / ;
+1459   
+1461   
+1462  set v / Old, New / ;
+1463   
+1464  parameters
+1465   
+1466  *  Production elasticities
+1467   
+1468     sigmaxp0(r,actf,v)      "CES between GHG and XP"
+1469     sigmap0(r,actf,v)       "CES between ND1 and VA"
+1470     sigmav0(r,actf,v)       "CES between LAB1 and VA1 in crops and other, VA1 and VA2 in livestock"
+1471     sigmav10(r,actf,v)      "CES between ND2 (fert) and VA2 in crops, LAB1 and KEF in livestock and land and KEF in other"
+1472     sigmav20(r,actf,v)      "CES between land and KEF in crops, land and ND2 (feed) in livestock. Not used in other"
+1473     sigmakef0(r,actf,v)     "CES between KF and NRG"
+1474     sigmakf0(r,actf,v)      "CES between KSW and NRF"
+1475     sigmakw0(r,actf,v)      "CES between KS and XWAT"
+1476     sigmak0(r,actf,v)       "CES between LAB2 and K"
+1477     sigmaul0(r,actf)        "CES across unskilled labor"
+1478     sigmasl0(r,actf)        "CES across skilled labor"
+1479     sigman10(r,actf)        "CES across intermediate demand in ND1 bundle"
+1480     sigman20(r,actf)        "CES across intermediate demand in ND2 bundle"
+1481     sigmawat0(r,actf)       "CES across intermediate demand in XWAT bundle"
+1482     sigmae0(r,actf,v)       "CES between ELY and NELY in energy bundle"
+1483     sigmanely0(r,actf,v)    "CES between COA and OLG in energy bundle"
+1484     sigmaolg0(r,actf,v)     "CES between OIL and GAS in energy bundle"
+1485     sigmaNRG0(r,actf,NRG,v) "CES within each of the NRG bundles"
+1486   
+1487  *  Make matrix elasticities (incl. power)
+1488   
+1489     omegas0(r,actf)         "Make matrix transformation elasticities: one activity --> many commodities"
+1490     sigmas0(r,commf)        "Make matrix substitution elasticities: one commodity produced by many activities"
+1491     sigmael0(r,elycf)       "Substitution between power and distribution and transmission"
+1492     sigmapow0(r,elycf)      "Substitution across power bundles"
+1493     sigmapb0(r,pb,elycf)    "Substitution across power activities within power bundles"
+1494   
+1495  *  Final demand elasticities
+1496   
+1497     incElas0(kf,r)          "Income elasticities"
+1498     eh0(kf,r)               "CDE expansion parameter"
+1499     bh0(kf,r)               "CDE substitution parameter"
+1500     nu0(r,kf,h)             "Elasticity of subsitution between energy and non-energy bundles in HH consumption"
+1501     nunnrg0(r,kf,h)         "Substitution elasticity across non-energy commodities in the non-energy bundle"
+1502     nue0(r,kf,h)            "Substitution elasticity between ELY and NELY bundle"
+1503     nunely0(r,kf,h)         "Substitution elasticity beteen COL and OLG bundle"
+1504     nuolg0(r,kf,h)          "Substitution elasticity between OIL and GAS bundle"
+1505     nuNRG0(r,kf,h,NRG)      "Substitution elasticity within NRG bundles"
+1506     sigmafd0(r,fd)          "CES expenditure elasticity for other final demand"
+1507   
+1508  *  Trade elasticities
+1509   
+1510     sigmam0(r,commf)        "Top level Armington elasticity"
+1511     sigmaw0(r,commf)        "Second level Armington elasticity"
+1512     omegax0(r,commf)        "Top level CET export elasticity"
+1513     omegaw0(r,commf)        "Second level CET export elasticity"
+1514     sigmamg0(commf)         "CES 'Make' elasticity for intl. trade and transport services"
+1515   
+1516  *  Factor supply elasticities
+1517   
+1518     omegak0(r)              "CET capital mobility elasticity in comp. stat. model"
+1519     etat0(r)                "Aggregate land supply elasticity"
+1520     landMax00(r)            "Initial ratio of land maximum wrt to land use"
+1521     omegat0(r)              "Land elasticity between intermed. land bundle and first land bundle"
+1522     omeganlb0(r)            "Land elasticity across intermediate land bundles"
+1523     omegalb0(r,lb)          "Land elasticity within land bundles"
+1524     etanrf0(r,actf)         "Natural resource supply elasticity"
+1525     invElas0(r,actf)        "Dis-investment elasticity"
+1526   
+1527     omegam0(r,l)            "Elasticity of migration"
+1528  ;
+1529   
+1530  execute_loaddc "ANX1/Agg/ANX1Prm.gdx"
+1531     sigmaxp0, sigmap0, sigman10, sigman20, sigmawat0,
+1532     sigmav0, sigmav10, sigmav20,
+1533     sigmakef0, sigmakf0, sigmakw0, sigmak0,
+1534     sigmaul0, sigmasl0,
+1535     sigmae0, sigmanely0, sigmaolg0, sigmaNRG0,
+1536     omegas0, sigmas0,
+1537     sigmael0, sigmapow0, sigmapb0,
+1538     incElas0, eh0, bh0, nu0, nunnrg0, nue0, nunely0, nuolg0, nuNRG0, sigmafd0
+1539     sigmam0, sigmaw0, omegax0, omegaw0, sigmamg0
+1540     omegak0, invElas0, etat0, landMax00,
+1541     omegat0, omeganlb0, omegalb0,
+1542     etanrf0, omegam0
+1543  ;
+1544   
+1545  parameters
+1546   
+1547  *  Production elasticities
+1548   
+1549     sigmaxp(r,a,v)      "CES between GHG and XP"
+1550     sigmap(r,a,v)       "CES between ND1 and VA"
+1551     sigmav(r,a,v)       "CES between LAB1 and VA1 in crops and other, VA1 and VA2 in livestock"
+1552     sigmav1(r,a,v)      "CES between ND2 (fert) and VA2 in crops, LAB1 and KEF in livestock and land and KEF in other"
+1553     sigmav2(r,a,v)      "CES between land and KEF in crops, land and ND2 (feed) in livestock. Not used in other"
+1554     sigmakef(r,a,v)     "CES between KF and NRG"
+1555     sigmakf(r,a,v)      "CES between KSW and NRF"
+1556     sigmakw(r,a,v)      "CES between KS and XWAT"
+1557     sigmak(r,a,v)       "CES between LAB2 and K"
+1558     sigmaul(r,a)        "CES across unskilled labor"
+1559     sigmasl(r,a)        "CES across skilled labor"
+1560     sigman1(r,a)        "CES across intermediate demand in ND1 bundle"
+1561     sigman2(r,a)        "CES across intermediate demand in ND2 bundle"
+1562     sigmawat(r,a)       "CES across intermediate demand in XWAT bundle"
+1563     sigmae(r,a,v)       "CES between ELY and NELY in energy bundle"
+1564     sigmanely(r,a,v)    "CES between COA and OLG in energy bundle"
+1565     sigmaolg(r,a,v)     "CES between OIL and GAS in energy bundle"
+1566     sigmaNRG(r,a,NRG,v) "CES within each of the NRG bundles"
+1567   
+1568  *  Make matrix elasticities (incl. power)
+1569   
+1570     omegas(r,a)         "Make matrix transformation elasticities: one activity --> many commodities"
+1571     sigmas(r,i)        "Make matrix substitution elasticities: one commodity produced by many activities"
+1572     sigmael(r,elyc)        "Substitution between power and distribution and transmission"
+1573     sigmapow(r,elyc)       "Substitution across power bundles"
+1574     sigmapb(r,pb,elyc)     "Substitution across power activities within power bundles"
+1575   
+1576  *  Final demand elasticities
+1577   
+1578     incElas(k,r)           "Income elasticities"
+1579     eh(k,r)                "CDE expansion parameter"
+1580     bh(k,r)                "CDE substitution parameter"
+1581     nu(r,k,h)              "Elasticity of subsitution between energy and non-energy bundles in HH consumption"
+1582     nunnrg(r,k,h)          "Substitution elasticity across non-energy commodities in the non-energy bundle"
+1583     nue(r,k,h)             "Substitution elasticity between ELY and NELY bundle"
+1584     nunely(r,k,h)          "Substitution elasticity beteen COL and OLG bundle"
+1585     nuolg(r,k,h)           "Substitution elasticity between OIL and GAS bundle"
+1586     nuNRG(r,k,h,NRG)       "Substitution elasticity within NRG bundles"
+1587     sigmafd(r,fd)          "CES expenditure elasticity for other final demand"
+1588   
+1589  *  Trade elasticities
+1590   
+1591     sigmam(r,i)        "Top level Armington elasticity"
+1592     sigmaw(r,i)        "Second level Armington elasticity"
+1593     omegax(r,i)        "Top level CET export elasticity"
+1594     omegaw(r,i)        "Second level CET export elasticity"
+1595     sigmamg(i)         "CES 'Make' elasticity for intl. trade and transport services"
+1596   
+1597  *  Factor supply elasticities
+1598   
+1599     omegak(r)              "CET capital mobility elasticity in comp. stat. model"
+1600     etat(r)                "Aggregate land supply elasticity"
+1601     landMax0(r)            "Initial ratio of land maximum wrt to land use"
+1602     omegat(r)              "Land elasticity between intermed. land bundle and first land bundle"
+1603     omeganlb(r)            "Land elasticity across intermediate land bundles"
+1604     omegalb(r,lb)          "Land elasticity within land bundles"
+1605     etanrf(r,a)         "Natural resource supply elasticity"
+1606     invElas(r,a)        "Dis-investment elasticity"
+1607   
+1608     omegam(r,l)            "Elasticity of migration"
+1609  ;
+1610   
+1611  $macro convav(sigma,sufx)    sigma(r,a,v) = sum(actf$mapact(a,actf), &sigma&sufx(r,actf,v))
+1612  $macro conva(sigma,sufx)     sigma(r,a) = sum(actf$mapact(a,actf), &sigma&sufx(r,actf))
+1613  $macro convavn(sigma,sufx)   sigma(r,a,NRG,v) = sum(actf$mapact(a,actf), &sigma&sufx(r,actf,NRG,v))
+1614  $macro convi0(sigma,sufx)    sigma(i) = sum(commf$mapcomm(i,commf), &sigma&sufx(commf))
+1615  $macro convi(sigma,sufx)     sigma(r,i) = sum(commf$mapcomm(i,commf), &sigma&sufx(r,commf))
+1616  $macro conve(sigma,sufx)     sigma(r,elyc) = sum(elycf$mapcomm(elyc,elycf), &sigma&sufx(r,elycf))
+1617  $macro convep(sigma,sufx)    sigma(r,pb,elyc) = sum(elycf$mapcomm(elyc,elycf), &sigma&sufx(r,pb,elycf))
+1618  $macro convk(sigma,sufx)     sigma(k,r) = sum(kf$mapkcomm(k,kf), &sigma&sufx(kf,r))
+1619  $macro convkh(sigma,sufx)    sigma(r,k,h) = sum(kf$mapkcomm(k,kf), &sigma&sufx(r,kf,h))
+1620  $macro convkhn(sigma,sufx)   sigma(r,k,h,NRG) = sum(kf$mapkcomm(k,kf), &sigma&sufx(r,kf,h,NRG))
+1621   
+1622  sigmaxp(r,a,v) = sum(actf$mapact(a,actf), sigmaxp0(r,actf,v)) ;
+1623  sigmap(r,a,v) = sum(actf$mapact(a,actf), sigmap0(r,actf,v)) ;
+1624  sigmav(r,a,v) = sum(actf$mapact(a,actf), sigmav0(r,actf,v)) ;
+1625  sigmav1(r,a,v) = sum(actf$mapact(a,actf), sigmav10(r,actf,v)) ;
+1626  sigmav2(r,a,v) = sum(actf$mapact(a,actf), sigmav20(r,actf,v)) ;
+1627  sigmakef(r,a,v) = sum(actf$mapact(a,actf), sigmakef0(r,actf,v)) ;
+1628  sigmakf(r,a,v) = sum(actf$mapact(a,actf), sigmakf0(r,actf,v)) ;
+1629  sigmakw(r,a,v) = sum(actf$mapact(a,actf), sigmakw0(r,actf,v)) ;
+1630  sigmak(r,a,v) = sum(actf$mapact(a,actf), sigmak0(r,actf,v)) ;
+1631  sigmaul(r,a) = sum(actf$mapact(a,actf), sigmaul0(r,actf)) ;
+1632  sigmasl(r,a) = sum(actf$mapact(a,actf), sigmasl0(r,actf)) ;
+1633  sigman1(r,a) = sum(actf$mapact(a,actf), sigman10(r,actf)) ;
+1634  sigman2(r,a) = sum(actf$mapact(a,actf), sigman20(r,actf)) ;
+1635  sigmawat(r,a) = sum(actf$mapact(a,actf), sigmawat0(r,actf)) ;
+1636  sigmae(r,a,v) = sum(actf$mapact(a,actf), sigmae0(r,actf,v)) ;
+1637  sigmanely(r,a,v) = sum(actf$mapact(a,actf), sigmanely0(r,actf,v)) ;
+1638  sigmaolg(r,a,v) = sum(actf$mapact(a,actf), sigmaolg0(r,actf,v)) ;
+1639  sigmaNRG(r,a,NRG,v) = sum(actf$mapact(a,actf), sigmaNRG0(r,actf,NRG,v)) ;
+1640   
+1641  omegas(r,a) = sum(actf$mapact(a,actf), omegas0(r,actf)) ;
+1642  sigmas(r,i) = sum(commf$mapcomm(i,commf), sigmas0(r,commf)) ;
+1643  sigmael(r,elyc) = sum(elycf$mapcomm(elyc,elycf), sigmael0(r,elycf)) ;
+1644  sigmapow(r,elyc) = sum(elycf$mapcomm(elyc,elycf), sigmapow0(r,elycf)) ;
+1645  sigmapb(r,pb,elyc) = sum(elycf$mapcomm(elyc,elycf), sigmapb0(r,pb,elycf)) ;
+1646   
+1647  incElas(k,r) = sum(kf$mapkcomm(k,kf), incElas0(kf,r)) ;
+1648  eh(k,r) = sum(kf$mapkcomm(k,kf), eh0(kf,r)) ;
+1649  bh(k,r) = sum(kf$mapkcomm(k,kf), bh0(kf,r)) ;
+1650  nu(r,k,h) = sum(kf$mapkcomm(k,kf), nu0(r,kf,h)) ;
+1651  nunnrg(r,k,h) = sum(kf$mapkcomm(k,kf), nunnrg0(r,kf,h)) ;
+1652  nue(r,k,h) = sum(kf$mapkcomm(k,kf), nue0(r,kf,h)) ;
+1653  nunely(r,k,h) = sum(kf$mapkcomm(k,kf), nunely0(r,kf,h)) ;
+1654  nuolg(r,k,h) = sum(kf$mapkcomm(k,kf), nuolg0(r,kf,h)) ;
+1655  nuNRG(r,k,h,NRG) = sum(kf$mapkcomm(k,kf), nuNRG0(r,kf,h,NRG)) ;
+1656   
+1657  sigmafd(r,fd) = sigmafd0(r,fd) ;
+1658   
+1659  sigmam(r,i) = sum(commf$mapcomm(i,commf), sigmam0(r,commf)) ;
+1660  sigmaw(r,i) = sum(commf$mapcomm(i,commf), sigmaw0(r,commf)) ;
+1661  omegax(r,i) = sum(commf$mapcomm(i,commf), omegax0(r,commf)) ;
+1662  omegaw(r,i) = sum(commf$mapcomm(i,commf), omegaw0(r,commf)) ;
+1663  sigmamg(i) = sum(commf$mapcomm(i,commf), sigmamg0(commf)) ;
+1664   
+1665  omegak(r)     = omegak0(r) ;
+1666  etat(r)       = etat0(r) ;
+1667  landMax0(r)   = landMax00(r) ;
+1668  omegat(r)     = omegat0(r) ;
+1669  omeganlb(r)   = omeganlb0(r) ;
+1670  omegalb(r,lb) = omegalb0(r,lb) ;
+1671   
+1672  etanrf(r,a) = sum(actf$mapact(a,actf), etanrf0(r,actf)) ;
+1673  invElas(r,a) = sum(actf$mapact(a,actf), invElas0(r,actf)) ;
+1674   
+1675  omegam(r,l) = omegam0(r,l) ;
+1676   
+1677  execute_unload "ANX1/agg/ANX1Prm.gdx"
+1678     sigmaxp=sigmaxp0, sigmap=sigmap0, sigman1=sigman10, sigman2=sigman20, sigmawat=sigmawat0,
+1679     sigmav=sigmav0, sigmav1=sigmav10, sigmav2=sigmav20,
+1680     sigmakef=sigmakef0, sigmakf=sigmakf0, sigmakw=sigmakw0, sigmak=sigmak0,
+1681     sigmaul=sigmaul0, sigmasl=sigmasl0,
+1682     sigmae=sigmae0, sigmanely=sigmanely0, sigmaolg=sigmaolg0, sigmaNRG=sigmaNRG0
+1683     omegas=omegas0, sigmas=sigmas0,
+1684     sigmael=sigmael0, sigmapow=sigmapow0, sigmapb=sigmapb0,
+1685     incElas=incElas0, eh=eh0, bh=bh0, nu=nu0, nunnrg=nunnrg0, nue=nue0, nunely=nunely0, nuolg=nuolg0, nuNRG=nuNRG0,
+1686     sigmafd=sigmafd0,
+1687     sigmam=sigmam0, sigmaw=sigmaw0, omegax=omegax0, omegaw=omegaw0, sigmamg=sigmamg0
+1688     omegak=omegak0, invElas=invElas0, etat=etat0, landMax0=landMax00,
+1689     omegat=omegat0, omeganlb=omeganlb0, omegalb=omegalb0,
+1690     etanrf=etanrf0, omegam=omegam0
+1691  ;
+1692   
+1693  *  Delete the temporary sets file
+GAMS 36.1.0  r2c0a44a Released Aug  2, 2021 WEX-WEI x86 64bit/MS Windows - 11/19/21 11:42:47 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\convertLabel.gms
+     2        1 INCLUDE        1       1  .F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\ANX1/Fnl/ANX1Sets.gms
+     3     1363 INCLUDE        1       2  .F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\tmpSets.gms
+
+
+COMPILATION TIME     =        0.015 SECONDS      3 MB  36.1.0 r2c0a44a WEX-WEI
+GAMS 36.1.0  r2c0a44a Released Aug  2, 2021 WEX-WEI x86 64bit/MS Windows - 11/19/21 11:42:47 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+EXECUTION TIME       =        0.016 SECONDS      5 MB  36.1.0 r2c0a44a WEX-WEI
+
+
+USER: Development Economics                          G210129/0001CA-WIN
+      The World Bank                                             DC5364
+
+
+**** FILE SUMMARY
+
+Input      F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\convertLabel.gms
+Output     F:\Andre\ENVISAGE-Training-2021-11\EnvisageNOV2021\Data\convertLabel.lst

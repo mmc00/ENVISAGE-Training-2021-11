@@ -1,0 +1,75 @@
+title FILTER : Filtering iteration : 1 (15), region CHN (0 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region XEA (10 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region USA (20 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region RUS (30 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region EUR (40 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region XOE (50 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region OPC (60 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region SAS (70 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region XLC (80 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+title FILTER : Filtering iteration : 1 (15), region ROW (90 % of regions), # of non-zeros: 9800, cur rel. tolerance % 0.00
+
+ 
+* --- value of transactions
+ 
+item                     start     end       abs diff  rel diff
+evfb                  63095678   63095676         -2       0.00 %
+GDP                   74481514   74481513         -1       0.00 %
+vom                  155517750  155517748         -2       0.00 %
+vxsb                  20449665   20449665          0       0.00 %
+vtwr                    620260     620260          0       0.00 %
+vdfb                  67172880   67173208        328       0.00 %
+vmfb                  14544965   14544636       -329       0.00 %
+vdpb                  38224412   38224029       -383       0.00 %
+vmpb                   4310148    4310501        352       0.01 %
+vdgb                  12956459   12956466          7       0.00 %
+vmgb                    252566     252564         -2       0.00 %
+vdib                  16094074   16094121         47       0.00 %
+vmib                   2643855    2643834        -21       0.00 %
+ 
+* --- non-zero items
+ 
+item                     start     end       abs diff  rel diff
+CHN                       1364       1203       -161     -11.80 %
+XEA                       1397       1299        -98      -7.02 %
+USA                       1363       1210       -153     -11.23 %
+RUS                       1352       1229       -123      -9.10 %
+FRS                        696        542       -154     -22.13 %
+COA                        530        442        -88     -16.60 %
+OIL                        497        367       -130     -26.16 %
+GAS                        515        470        -45      -8.74 %
+OXT                        697        640        -57      -8.18 %
+P_C                        551        548         -3      -0.54 %
+AGR                        697        575       -122     -17.50 %
+EIT                        687        684         -3      -0.44 %
+XMN                        687        684         -3      -0.44 %
+ETD                        550        518        -32      -5.82 %
+CLP                        550        507        -43      -7.82 %
+OLP                        550        486        -64     -11.64 %
+GSP                        550        510        -40      -7.27 %
+NUC                        549        483        -66     -12.02 %
+HYD                        550        504        -46      -8.36 %
+SOL                        548        542         -6      -1.09 %
+WND                        550        546         -4      -0.73 %
+XEL                        549        545         -4      -0.73 %
+SRV                        590        587         -3      -0.51 %
+EUR                       1401       1373        -28      -2.00 %
+XOE                       1387       1288        -99      -7.14 %
+OPC                       1393       1298        -95      -6.82 %
+SAS                       1383       1300        -83      -6.00 %
+XLC                       1393       1300        -93      -6.68 %
+ROW                       1409       1372        -37      -2.63 %
+evfb                       630        630          0       0.00 %
+vom                        190        190          0       0.00 %
+vxsb                      1900       1843        -57      -3.00 %
+vtwr                       849        849          0       0.00 %
+vdfb                      3355       3172       -183      -5.45 %
+vmfb                      3359       2752       -607     -18.07 %
+vdpb                       190        175        -15      -7.89 %
+vmpb                       190        179        -11      -5.79 %
+vdgb                        60         48        -12     -20.00 %
+vmgb                        60         45        -15     -25.00 %
+vdib                        60         57         -3      -5.00 %
+vmib                        60         50        -10     -16.67 %
+total                    10903       9990       -913      -8.37 %
+ 

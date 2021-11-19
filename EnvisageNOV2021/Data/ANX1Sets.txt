@@ -43,4 +43,17 @@
 
 1,"High-income countries (hic)","United States (USA), Western Europe (EUR), Other HIY OECD (XOE)"
 2,"Developing countries (lmy)","China (CHN), Rest of East Asia and Pacific (XEA), Russia (RUS), Major oil and gas exporters (OPC), South Asia (SAS), Rest of Latin America & Caribbean (XLC), Rest of the World (ROW)"
-3,"World Total (wld)","China (CHN), Rest of East Asia and Pacific (XEA), United States (USA), Russia (RUS), Western Europe (EUR), Other HIY OECD (XOE), Major oil and gas exporters (OPC), South Asia (SAS), Rest of Latin America & Caribbean (XLC), Rest o
+3,"World Total (wld)","China (CHN), Rest of East Asia and Pacific (XEA), United States (USA), Russia (RUS), Western Europe (EUR), Other HIY OECD (XOE), Major oil and gas exporters (OPC), South Asia (SAS), Rest of Latin America & Caribbean (XLC), Rest of the World (ROW)"
+
+1,"Agriculture (tagr-a)","Forestry (FRS-a), Agriculture (AGR-a)"
+2,"Manufacturing (tman-a)","Petroleum and coal products (P_C-a), Vegetable oils and fats (EIT-a), Dairy products (XMN-a)"
+3,"Services (tsrv-a)","Electricity transmission (ETD-a), Coal-fired power (CLP-a), Oil-fired power (OLP-a), Gas-fired power (GSP-a), Nuclear power (NUC-a), Hydro power (HYD-a), Solar power (SOL-a), Wind power (WND-a), Other power (XEL-a), Services (SRV-a)"
+4,"Other (toth-a)","Coal (COA-a), Oil (OIL-a), Gas (GAS-a), Minerals nec (OXT-a)"
+5,"Total (ttot-a)","Forestry (FRS-a), Coal (COA-a), Oil (OIL-a), Gas (GAS-a), Minerals nec (OXT-a), Petroleum and coal products (P_C-a), Agriculture (AGR-a), Vegetable oils and fats (EIT-a), Dairy products (XMN-a), Electricity transmission (ETD-a), Coal-fired power (CLP-a), Oil-fired power (OLP-a), Gas-fired power (GSP-a), Nuclear power (NUC-a), Hydro power (HYD-a), Solar power (SOL-a), Wind power (WND-a), Other power (XEL-a), Services (SRV-a)"
+
+1,"Agriculture (tagr-c)","Forestry (FRS-c), Agriculture (AGR-c)"
+2,"Manufacturing (tman-c)","Petroleum and coal products (P_C-c), Vegetable oils and fats (EIT-c), Dairy products (XMN-c)"
+3,"Services (tsrv-c)","Services (SRV-c), Electricity (ELY-c)"
+4,"Other (toth-c)","Coal (COA-c), Oil (OIL-c), Gas (GAS-c), Minerals nec (OXT-c)"
+5,"Total (ttot-c)","Forestry (FRS-c), Coal (COA-c), Oil (OIL-c), Gas (GAS-c), Minerals nec (OXT-c), Petroleum and coal products (P_C-c), Agriculture (AGR-c), Vegetable oils and fats (EIT-c), Dairy products (XMN-c), Services (SRV-c), Electricity (ELY-c)"
+
