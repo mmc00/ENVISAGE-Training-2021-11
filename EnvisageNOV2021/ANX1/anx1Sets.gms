@@ -283,15 +283,15 @@ set h(fd) "Households" /
    hhd          "Household"
 / ;
 
-set gov(fd) "Government" /
+singleton set gov(fd) "Government" /
    gov          "Government"
 / ;
 
-set r_d(fd) "Research and development" /
+singleton set r_d(fd) "Research and development" /
    r_d          "Research and development"
 / ;
 
-set inv(fd) "Investment" /
+singleton set inv(fd) "Investment" /
    inv          "Investment"
 / ;
 
@@ -1186,9 +1186,7 @@ set emq "Emission control aggregations" /
 / ;
 
 set mapEM(emq,em) /
-
-   CO2.CO2
-
+CO2.CO2
 / ;
 
 mapEM("CO2e",em)$ghg(em) = yes ;
