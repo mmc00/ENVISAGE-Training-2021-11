@@ -1,4 +1,6 @@
-1. RunManual Makedata command
+List of Steps to run the model
+
+1. Aggregate Data
    1. Open command prompt in  "EnvisageNOV2021/Data"
    2. Run command "makedata ANX1 -ifFilter -ifAlt -ifEnv"
    3. Copy data
